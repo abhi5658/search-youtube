@@ -19,11 +19,11 @@ An Android App which provides the basic functionality of searching videos from y
 
 - Dashboard
 
-<img src="https://github.com/abhi5658/search-youtube/blob/master/screenshots/dashboard.png" width="40%">
+<img src="https://github.com/abhi5658/search-youtube/blob/master/screenshots/dashboard.png" width="250">
 
 - Loading while searching and displaying
 
-<img src="https://github.com/abhi5658/search-youtube/blob/master/screenshots/loading.png" width="40%">
+<img src="https://github.com/abhi5658/search-youtube/blob/master/screenshots/loading.png" width="250">
 
 - Video being loaded on next screen
 
