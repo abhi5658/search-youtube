@@ -27,8 +27,8 @@ An Android App which provides the basic functionality of searching videos from y
 
 - Video being loaded on next screen
 
-<img src="https://github.com/abhi5658/search-youtube/blob/master/screenshots/loadingVideo.png" width="40%">
+<img src="https://github.com/abhi5658/search-youtube/blob/master/screenshots/loadingVideo.png" width="250">
 
 - Playing video
 
-<img src="https://github.com/abhi5658/search-youtube/blob/master/screenshots/playingVideo.png" width="40%">
+<img src="https://github.com/abhi5658/search-youtube/blob/master/screenshots/playingVideo.png" width="250">
