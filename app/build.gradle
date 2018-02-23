@@ -1,14 +1,32 @@
 apply plugin: 'com.android.application'
 
 android {
+
+    //Compiled for this SDK version
     compileSdkVersion 25
+
+    //buildTools to be used for compiling
     buildToolsVersion "25.0.1"
+    
     defaultConfig {
+
+        //app unique ID
         applicationId "com.test.abhishek.searchyoutube"
+
+        //minimum SDK version on which the app  can be installed and run
+        //sdk 21 : Android 5.0(Lollipop)
         minSdkVersion 21
+
+        //Target SDK for which the app is compiled
+        //sdk 25 : Android 7.1(Nougat)
         targetSdkVersion 25
+
+        //App's build version
         versionCode 1
+
+        //App's version shown to user
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -30,23 +48,36 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
 
+    //dependency for backward compatibility
     compile 'com.android.support:appcompat-v7:25.3.1'
+
+    //dependency for RecyclerView
     compile 'com.android.support:recyclerview-v7:25.3.1'
+
+    //dependency for CardView
     compile 'com.android.support:cardview-v7:25.3.1'
 
+    //Picasso library dependency
     compile 'com.squareup.picasso:picasso:2.5.2'
 
-    compile 'com.google.android.gms:play-services-auth:10.2.1'
-    
+    //google client for android api dependency
+    //excluding org.apache.httpcomponents so as to resolve anonymity
     compile('com.google.api-client:google-api-client-android:1.23.0') {
         exclude group: 'org.apache.httpcomponents'
     }
+
+    //youtube data api v3 dependency
+    //excluding org.apache.httpcomponents so as to resolve anonymity
     compile('com.google.apis:google-api-services-youtube:v3-rev192-1.23.0') {
         exclude group: 'org.apache.httpcomponents'
     }
-    compile files('libs/google-http-client-android-1.23.0.jar')
+
+    //dependency for JSON support
     compile files('libs/gson-2.1.jar')
+
+    //dependency for finding bugs
     compile files('libs/jsr305-1.3.9.jar')
-    compile files('libs/google-http-client-1.23.0.jar')
+
+    //YouTubeAndroidPlayerApi for playing youtube videos
     compile files('libs/YouTubeAndroidPlayerApi.jar')
 }

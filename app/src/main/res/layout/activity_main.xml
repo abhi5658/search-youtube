@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- This layout defines how the activity should look when the app is opened as this is the layout which is loaded at first -->
+<!-- LinearLayout stacks the views one after the other which in this case is vertical orientation -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <!-- A input text type view to enter the search keyword(s)
+    and setting the keyboard action to actionSearch so that it shows a search icon 
+    for clicking after a text has been entered -->
     <EditText
         android:id="@+id/search_input"
         android:layout_width="match_parent"
@@ -13,7 +18,9 @@
         android:inputType="text"
         android:maxLines="1" />
 
-
+    <!-- RecyclerView will show the result in a ordered manner
+    by infalting the video_item.xml which has the CardView set to show 
+    Thumbnail, Video title, id and short description -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/videos_recycler_view"
         android:layout_width="match_parent"

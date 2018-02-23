@@ -1,160 +1,206 @@
-package com.test.abhishek.searchyoutube;
+	package com.test.abhishek.searchyoutube;
 
-import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
+	import android.content.Context;
+	import android.util.Log;
+	import android.widget.Toast;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+	import java.io.IOException;
+	import java.util.ArrayList;
+	import java.util.Iterator;
+	import java.util.List;
 
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
+	import com.google.api.client.http.HttpRequest;
+	import com.google.api.client.http.HttpRequestInitializer;
+	import com.google.api.client.http.javanet.NetHttpTransport;
+	import com.google.api.client.json.jackson2.JacksonFactory;
 
-import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.ResourceId;
-import com.google.api.services.youtube.model.SearchListResponse;
-import com.google.api.services.youtube.model.SearchResult;
-import com.google.api.services.youtube.model.Thumbnail;
-
-
-
-/**
- * Created by Abhishek on 14-Feb-18.
- */
-
-public class YoutubeConnector {
-
-    //youtube object for executing api related queries
-    private YouTube youtube;
-    
-    //custom list of youtube which gets returned when searched for keyword
-    private YouTube.Search.List query;
-
-    //Developer API key
-    public static final String KEY = "API_KEY_FROM_CONSOLE";
-
-    //Package name of the app that will call the API
-    public static final String PACKAGENAME = "com.test.abhishek.searchyoutube";
-    
-    //SHA1 fingerprint of APP
-    public static final String SHA1 = "SHA1_FINGERPRINT";
-    
-    //maximum results that should be downloaded at a time
-    private static final long MAXRESULTS = 25;
-
-    public YoutubeConnector(Context context) {
+	import com.google.api.services.youtube.YouTube;
+	import com.google.api.services.youtube.model.ResourceId;
+	import com.google.api.services.youtube.model.SearchListResponse;
+	import com.google.api.services.youtube.model.SearchResult;
+	import com.google.api.services.youtube.model.Thumbnail;
 
 
-        //instantiate the youtube object with builder
-        youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
-            @Override
-            public void initialize(HttpRequest request) throws IOException {
 
-                //setting package name and sha1 certificate to identify request by server
-                request.getHeaders().set("X-Android-Package", PACKAGENAME);
-                request.getHeaders().set("X-Android-Cert",SHA1);
-            }
-        }).setApplicationName("SearchYoutube").build();
+	/**
+	 * Created by Abhishek on 14-Feb-18.
+	 */
 
-        try {
-            query = youtube.search().list("id,snippet");
+	public class YoutubeConnector {
 
-            //setting API key to query
-            query.setKey(KEY);
+	    //Youtube object for executing api related queries through Youtube Data API
+		private YouTube youtube;
 
-            //setting type to video so that only videos are returned
-            query.setType("video");
+	    //custom list of youtube which gets returned when searched for keyword
+	    //Returns a collection of search results that match the query parameters specified in the API request
+	    //By default, a search result set identifies matching video, channel, and playlist resources,
+	    //but you can also configure queries to only retrieve a specific type of resource
+		private YouTube.Search.List query;
 
-            //setting fields which should be returned
-            //setting only those fields which are required
-            //for maximum efficiency
-            query.setFields("items(id/kind,id/videoId,snippet/title,snippet/description,snippet/thumbnails/high/url)");
+	    //Developer API key a developer can obtain after creating a new project in google developer console
+	    //Developer has to enable YouTube Data API v3 in the project
+	    //Add credentials and then provide the Application's package name and SHA fingerprint
+		public static final String KEY = "API_KEY_FROM_GOOGLE_CLOUD_CONSOLE";
 
-        } catch (IOException e) {
-            //printing stack trace if error occurs
-            Log.d("YC", "Could not initialize: " + e);
-        }
-    }
+	    //Package name of the app that will call the YouTube Data API
+		public static final String PACKAGENAME = "com.test.abhishek.searchyoutube";
 
-    public List<VideoItem> search(String keywords) {
+	    //SHA1 fingerprint of APP can be found by double clicking on the app signing report on right tab called gradle
+		public static final String SHA1 = "SHA1_FINGERPRINT_STRING";
 
-        //setting keyword to query
-        query.setQ(keywords);
+	    //maximum results that should be downloaded via the YouTube data API at a time
+		private static final long MAXRESULTS = 25;
 
-        //max results that should be returned
-        query.setMaxResults(MAXRESULTS);
+	    //Constructor to properly initialize Youtube's object
+		public YoutubeConnector(Context context) {
 
-        try {
-            //executing prepared query
-            SearchListResponse response = query.execute();
+	        //Youtube.Builder returns an instance of a new builder
+	        //Parameters:
+	        //transport - HTTP transport
+	        //jsonFactory - JSON factory
+	        //httpRequestInitializer - HTTP request initializer or null for none
+	        // This object is used to make YouTube Data API requests. The last
+			// argument is required, but since we don't need anything
+			// initialized when the HttpRequest is initialized, we override
+			// the interface and provide a no-op function.
+			youtube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
 
-            //retrieving list from response received
-            List<SearchResult> results = response.getItems();
+				//initialize method helps to add any extra details that may be required to process the query
+				@Override
+				public void initialize(HttpRequest request) throws IOException {
 
-            //list of type VideoItem to save all data individually
-            List<VideoItem> items = new ArrayList<VideoItem>();
+	                //setting package name and sha1 certificate to identify request by server
+					request.getHeaders().set("X-Android-Package", PACKAGENAME);
+					request.getHeaders().set("X-Android-Cert",SHA1);
+				}
+			}).setApplicationName("SearchYoutube").build();
 
-            if (results != null) {
-                items = setItemsList(results.iterator());
-            }
+			try {
 
-            return items;
+				// Define the API request for retrieving search results.
+				query = youtube.search().list("id,snippet");
 
-        } catch (IOException e) {
-            Log.d("YC", "Could not search: " + e);
-            return null;
-        }
-    }
+	            //setting API key to query
+	            // Set your developer key from the {{ Google Cloud Console }} for
+            	// non-authenticated requests. See:
+            	// {{ https://cloud.google.com/console }}
+				query.setKey(KEY);
 
-    //method for filling array list
-    private static List<VideoItem> setItemsList(Iterator<SearchResult> iteratorSearchResults) {
+	            // Restrict the search results to only include videos. See:
+            	// https://developers.google.com/youtube/v3/docs/search/list#type
+				query.setType("video");
 
-        //temporary list
-        List<VideoItem> tempSetItems = new ArrayList<>();
+	            //setting fields which should be returned
+	            //setting only those fields which are required
+	            //for maximum efficiency
+	            //here we are retreiving fiels:
+	            //-kind of video
+	            //-video ID
+	            //-title of video
+	            //-description of video
+	            //high quality thumbnail url of the video
+				query.setFields("items(id/kind,id/videoId,snippet/title,snippet/description,snippet/thumbnails/high/url)");
 
-        //if no result then printing no results
-        if (!iteratorSearchResults.hasNext()) {
-            System.out.println(" There aren't any results for your query.");
-        }
+			} catch (IOException e) {
 
-        //iterating through all search results
-        while (iteratorSearchResults.hasNext()) {
+	            //printing stack trace if error occurs
+				Log.d("YC", "Could not initialize: " + e);
+			}
+		}
 
-            //current video item
-            SearchResult singleVideo = iteratorSearchResults.next();
-            ResourceId rId = singleVideo.getId();
+		public List<VideoItem> search(String keywords) {
 
-            // Confirm that the result represents a video. Otherwise, the
-            // item will not contain a video ID.
-            if (rId.getKind().equals("youtube#video")) {
+	        //setting keyword to query
+			query.setQ(keywords);
 
-                //object of VideoItem class that can be added to array list
-                VideoItem item = new VideoItem();
+	        //max results that should be returned
+			query.setMaxResults(MAXRESULTS);
 
-                //getting High quality thumbnail object
-                Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getHigh();
+			try {
 
-                //retrieving title,description,thumbnail url, id
-                item.setTitle(singleVideo.getSnippet().getTitle());
-                item.setDescription(singleVideo.getSnippet().getDescription());
-                item.setThumbnailURL(thumbnail.getUrl());
-                item.setId(singleVideo.getId().getVideoId());
+	            //executing prepared query and calling Youtube API
+				SearchListResponse response = query.execute();
 
-                //adding item to temp array list
-                tempSetItems.add(item);
+	            //retrieving list from response received
+	            //getItems method returns a list from the response which is originally in the form of JSON
+				List<SearchResult> results = response.getItems();
 
-                //for debug purpose
-                System.out.println(" Video Id" + rId.getVideoId());
-                System.out.println(" Title: " + singleVideo.getSnippet().getTitle());
-                System.out.println(" Thumbnail: " + thumbnail.getUrl());
-                System.out.println(" Description: "+ singleVideo.getSnippet().getDescription());
-                System.out.println("\n-------------------------------------------------------------\n");
-            }
-        }
-        return tempSetItems;
-    }
-}
+	            //list of type VideoItem for saving all data individually
+				List<VideoItem> items = new ArrayList<VideoItem>();
+
+				//check if result is found and call our setItemsList method
+				if (results != null) {
+
+					//iterator method returns a Iterator instance which can be used to iterate through all values in list
+					items = setItemsList(results.iterator());
+				}
+
+				return items;
+
+			} catch (IOException e) {
+
+				//catch exception and print on console
+				Log.d("YC", "Could not search: " + e);
+				return null;
+			}
+		}
+
+	    //method for filling our array list
+		private static List<VideoItem> setItemsList(Iterator<SearchResult> iteratorSearchResults) {
+
+	        //temporary list to store the raw data from the returned results
+			List<VideoItem> tempSetItems = new ArrayList<>();
+
+	        //if no result then printing appropriate output
+			if (!iteratorSearchResults.hasNext()) {
+				System.out.println(" There aren't any results for your query.");
+			}
+
+	        //iterating through all search results
+	        //hasNext() method returns true until it has no elements left to iterate
+			while (iteratorSearchResults.hasNext()) {
+
+	            //next() method returns single instance of current video item
+	            //and returns next item everytime it is called
+	            //SearchResult is Youtube's custom result type which can be used to retrieve data of each video item
+				SearchResult singleVideo = iteratorSearchResults.next();
+
+				//getId() method returns the resource ID of one video in the result obtained
+				ResourceId rId = singleVideo.getId();
+
+	            // Confirm that the result represents a video. Otherwise, the
+	            // item will not contain a video ID.
+	            //getKind() returns which type of resource it is which can be video, playlist or channel
+				if (rId.getKind().equals("youtube#video")) {
+
+	                //object of VideoItem class that can be added to array list
+					VideoItem item = new VideoItem();
+
+	                //getting High quality thumbnail object
+	                //URL of thumbnail is in the heirarchy snippet/thumbnails/high/url
+					Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getHigh();
+
+	                //retrieving title,description,thumbnail url, id from the heirarchy of each resource
+	                //Video ID - id/videoId
+	                //Title - snippet/title
+	                //Description - snippet/description
+	                //Thumbnail - snippet/thumbnails/high/url
+					item.setId(singleVideo.getId().getVideoId());
+					item.setTitle(singleVideo.getSnippet().getTitle());
+					item.setDescription(singleVideo.getSnippet().getDescription());
+					item.setThumbnailURL(thumbnail.getUrl());
+
+	                //adding one Video item to temporary array list
+					tempSetItems.add(item);
+
+	                //for debug purpose printing one by one details of each Video that was found
+					System.out.println(" Video Id" + rId.getVideoId());
+					System.out.println(" Title: " + singleVideo.getSnippet().getTitle());
+					System.out.println(" Thumbnail: " + thumbnail.getUrl());
+					System.out.println(" Description: "+ singleVideo.getSnippet().getDescription());
+					System.out.println("\n-------------------------------------------------------------\n");
+				}
+			}
+			return tempSetItems;
+		}
+	}
