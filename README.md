@@ -36,3 +36,10 @@ An Android App which provides the basic functionality of searching videos from y
 - Playing video
 
 <img src="https://github.com/abhi5658/search-youtube/raw/master/screenshots/playingVideo.png" width="250">
+
+
+____
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=abhi5658/search-youtube&type=Date)](https://star-history.com/#abhi5658/search-youtube&Date)
+
