@@ -1,8 +1,3 @@
----
-title: YouTube Search Android App
-description: 'An Android App used for searching and playing videos from YouTube. Used: Youtube Data API v3, YouTube Player API'
----
-
 # search-youtube
 An Android App which provides the basic functionality of searching videos from youtube, displaying the results and playing them.
 
