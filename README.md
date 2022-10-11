@@ -1,4 +1,4 @@
-# search-youtube
+# Youtube Search Android App
 An Android App which provides the basic functionality of searching videos from youtube, displaying the results and playing them.
 
 - Used Youtube Data API v3
