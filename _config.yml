@@ -1,6 +1,8 @@
-remote_theme: pages-themes/architect@v0.2.0
-title: Search YouTube Android App
+remote_theme: pages-themes/cayman@v0.2.0
+title: YouTube Search Android App
 description: 'An Android App used for searching and playing videos from YouTube. Used: Youtube Data API v3, YouTube Player API'
 show_downloads: true
 github:
   zip_url: 'https://github.com/abhi5658/search-youtube/raw/master/Search%20Youtube.apk'
+  tar_url: 'https://github.com/abhi5658/search-youtube/raw/master/Search%20Youtube.apk'
+  another_url: '#'
