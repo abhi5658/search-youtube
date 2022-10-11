@@ -4,7 +4,7 @@ An Android App which provides the basic functionality of searching videos from y
 - Used Youtube Data API v3
 - Used Youtube Player API 
 
-## :inbox_tray: [Download Apk(Android v5.0+ required)](https://github.com/abhi5658/search-youtube/raw/master/Search%20Youtube.apk)
+## 🔗 [Download Apk(Android v5.0+ required)](https://github.com/abhi5658/search-youtube/raw/master/Search%20Youtube.apk) 📥
 
 ## Features
 - Search
